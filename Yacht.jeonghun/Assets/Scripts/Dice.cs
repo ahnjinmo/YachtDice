@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Dice : MonoBehaviour
 {
+    // External References
+    public Roll roll;
+    public ScoreManager sManager;
+    
     public static Vector3 sideOne   = new Vector3(-90, 0, 0);
     public static Vector3 sideTwo   = new Vector3(0, 0, -90);
     public static Vector3 sideThree = new Vector3(0, 0, 0);
@@ -17,15 +21,13 @@ public class Dice : MonoBehaviour
     
     float m_rotSpeed;
     Vector3 m_initialPos;
-    Rigidbody diceRigidbody;
-    
-    public Roll roll;
-    public ScoreManager sManager;
+    Rigidbody m_diceRigidbody;
+
     // Start is called before the first frame update
     void Start()
     {
         m_chosen = false;   m_rotSpeed = 150f;  m_state = 0;
-        diceRigidbody = GetComponent<Rigidbody>();
+        m_diceRigidbody = GetComponent<Rigidbody>();
 
         m_initialPos = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
     }
@@ -34,11 +36,11 @@ public class Dice : MonoBehaviour
     void Update()
     {
         // Physics off if dice is chosen
-        if (m_chosen) diceRigidbody.isKinematic = true;
-        else diceRigidbody.isKinematic = false;
+        if (m_chosen) m_diceRigidbody.isKinematic = true;
+        else m_diceRigidbody.isKinematic = false;
 
         // Keep Dice Rotating for Random Results
-        if (m_state == 0) gameObject.transform.Rotate(0, 0, m_rotSpeed * Time.deltaTime)
+        if (m_state == 0) gameObject.transform.Rotate(0, 0, m_rotSpeed * Time.deltaTime);
 
         if (Input.GetKeyDown(KeyCode.R)) ResetDie();
     }
@@ -52,8 +54,8 @@ public class Dice : MonoBehaviour
             Vector3 randomRot = new Vector3(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
             gameObject.transform.position = m_initialPos;
             gameObject.transform.eulerAngles = randomRot;
-            diceRigidbody.useGravity = false;
-            diceRigidbody.velocity = Vector3.zero;
+            m_diceRigidbody.useGravity = false;
+            m_diceRigidbody.velocity = Vector3.zero;
             m_state = 0;
             roll.m_rolled = false;
 

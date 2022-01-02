@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -10,9 +11,9 @@ public class ScoreManager : MonoBehaviour
     public GameObject diceUpclose;
     public GameObject diceChosen;
     public GameObject scoreUI;
+    public Canvas rerollButton;
     public Text bonusScore;
     public Text totalScore;
-    public Canvas rerollButton;
 
     List<Transform> m_dice;
     List<Transform> m_diceUpclose;
@@ -27,8 +28,8 @@ public class ScoreManager : MonoBehaviour
     bool m_bonusAdded;
     int m_numChosen;
     int m_numRolls;
-    int total;
-    int turns;
+    int m_total;
+    int m_turns;
     Ray m_ray;
 
     bool m_aces;
@@ -43,6 +44,7 @@ public class ScoreManager : MonoBehaviour
     bool m_sstraight;
     bool m_lstraight;
     bool m_yacht;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,7 +52,7 @@ public class ScoreManager : MonoBehaviour
         m_choice = false; m_fourofakind = false; m_fullhouse = false; m_sstraight = false; m_lstraight = false; m_yacht = false;
         m_bonusAdded = false;   totalScore.text = "0";  bonusScore.text = "0";
 
-        m_diceStatic = false;   m_choosingDice = false;     m_numChosen = 0;    m_numRolls = 0;     total = 0;      turns = 0;
+        m_diceStatic = false;   m_choosingDice = false;     m_numChosen = 0;    m_numRolls = 0;     m_total = 0;      m_turns = 0;
         m_dice = new List<Transform>();     m_diceProperties = new List<Dice>();    m_diceUpclose = new List<Transform>();  m_diceChosen = new List<Transform>();   m_userScore = new List<Text>(); m_scores = new List<int>();
         for (int i = 0; i < 5; i++)
         {
@@ -67,8 +69,8 @@ public class ScoreManager : MonoBehaviour
     void Update()
     {
         if (m_choosingDice) ChooseDice();
-        if (m_choosingDice && m_diceStatic) ClickField();
-        if (turns == 12) { }                                                        // End Game
+        if (m_choosingDice) ClickField();
+        if (m_turns == 12) { SceneManager.LoadScene(0); }                                                        // End Game
     }
     
     private void OnTriggerStay(Collider other)
@@ -421,40 +423,40 @@ public class ScoreManager : MonoBehaviour
                 switch(hits[i].collider.gameObject.name)
                 {
                     case "Aces":
-                        if (!m_aces) { total += int.Parse(m_userScore[0].text); CheckBonus(); ChooseField(0); m_aces = true; turns++; }
+                        if (!m_aces) { m_total += int.Parse(m_userScore[0].text); ChooseField(0); CheckBonus(); m_aces = true; m_turns++; }
                         break;
                     case "Deuces":
-                        if (!m_deuces) { total += int.Parse(m_userScore[1].text); CheckBonus(); ChooseField(1); m_deuces = true; turns++; }
+                        if (!m_deuces) { m_total += int.Parse(m_userScore[1].text); ChooseField(1); CheckBonus(); m_deuces = true; m_turns++; }
                         break;
                     case "Threes":
-                        if (!m_threes) { total += int.Parse(m_userScore[2].text); CheckBonus(); ChooseField(2); m_threes = true; turns++; }
+                        if (!m_threes) { m_total += int.Parse(m_userScore[2].text); ChooseField(2); CheckBonus(); m_threes = true; m_turns++; }
                         break;
                     case "Fours":
-                        if (!m_fours) { total += int.Parse(m_userScore[3].text); CheckBonus(); ChooseField(3); m_fours = true; turns++; }
+                        if (!m_fours) { m_total += int.Parse(m_userScore[3].text); ChooseField(3); CheckBonus(); m_fours = true; m_turns++; }
                         break;
                     case "Fives":
-                        if (!m_fives) { total += int.Parse(m_userScore[4].text); CheckBonus(); ChooseField(4); m_fives = true; turns++; }
+                        if (!m_fives) { m_total += int.Parse(m_userScore[4].text); ChooseField(4); CheckBonus(); m_fives = true; m_turns++; }
                         break;
                     case "Sixes":
-                        if (!m_sixes) { total += int.Parse(m_userScore[5].text); CheckBonus(); ChooseField(5); m_sixes = true; turns++; }
+                        if (!m_sixes) { m_total += int.Parse(m_userScore[5].text); ChooseField(5); CheckBonus(); m_sixes = true; m_turns++; }
                         break;
                     case "Choice":
-                        if (!m_choice) { total += int.Parse(m_userScore[6].text); CheckBonus(); ChooseField(6); m_choice = true; turns++; }
+                        if (!m_choice) { m_total += int.Parse(m_userScore[6].text); ChooseField(6); CheckBonus(); m_choice = true; m_turns++; }
                         break;
                     case "4 of a Kind":
-                        if (!m_fourofakind) { total += int.Parse(m_userScore[7].text); CheckBonus(); ChooseField(7); m_fourofakind = true; turns++; }
+                        if (!m_fourofakind) { m_total += int.Parse(m_userScore[7].text); ChooseField(7); CheckBonus(); m_fourofakind = true; m_turns++; }
                         break;
                     case "Full House":
-                        if (!m_fullhouse) { total += int.Parse(m_userScore[8].text); CheckBonus(); ChooseField(8); m_fullhouse = true; turns++; }
+                        if (!m_fullhouse) { m_total += int.Parse(m_userScore[8].text); ChooseField(8); CheckBonus(); m_fullhouse = true; m_turns++; }
                         break;
                     case "S. Straight":
-                        if (!m_sstraight) { total += int.Parse(m_userScore[9].text); CheckBonus(); ChooseField(9); m_sstraight = true; turns++; }
+                        if (!m_sstraight) { m_total += int.Parse(m_userScore[9].text); ChooseField(9); CheckBonus(); m_sstraight = true; m_turns++; }
                         break;
                     case "L. Straight":
-                        if (!m_lstraight) { total += int.Parse(m_userScore[10].text); CheckBonus(); ChooseField(10); m_lstraight = true; turns++; }
+                        if (!m_lstraight) { m_total += int.Parse(m_userScore[10].text); ChooseField(10); CheckBonus(); m_lstraight = true; m_turns++; }
                         break;
                     case "Yacht":
-                        if (!m_yacht) { total += int.Parse(m_userScore[11].text); CheckBonus(); ChooseField(11); m_yacht = true; turns++; }
+                        if (!m_yacht) { m_total += int.Parse(m_userScore[11].text); ChooseField(11); CheckBonus(); m_yacht = true; m_turns++; }
                         break;
                     default:
                         break;
@@ -529,8 +531,7 @@ public class ScoreManager : MonoBehaviour
             if (m_fives) bonus += int.Parse(m_userScore[4].text);
             if (m_sixes) bonus += int.Parse(m_userScore[5].text);
 
-            if (bonus >= 63) { total += 35; bonusScore.text = "35"; m_bonusAdded = true; }
-            
+            if (bonus >= 63) { m_total += 35; m_bonusAdded = true; }
         }
         NextTurn();
     }
@@ -540,6 +541,7 @@ public class ScoreManager : MonoBehaviour
         for(int i = 0; i < 5; i++) { m_diceProperties[i].m_chosen = false;   m_diceProperties[i].ResetDie(); }
         m_choosingDice = false;     m_diceStatic = false;   m_numChosen = 0;    m_numRolls = 0;
         rerollButton.gameObject.SetActive(false);
-        totalScore.text = total.ToString();
+        totalScore.text = m_total.ToString();
+        if(m_bonusAdded) bonusScore.text = "35";
     }
 }
