@@ -38,11 +38,7 @@ public class Dice : MonoBehaviour
         else diceRigidbody.isKinematic = false;
 
         // Keep Dice Rotating for Random Results
-        if (m_state == 0)
-        {
-            gameObject.transform.Rotate(0, 0, m_rotSpeed * Time.deltaTime);
-            Debug.Log("Waiting...");
-        }
+        if (m_state == 0) gameObject.transform.Rotate(0, 0, m_rotSpeed * Time.deltaTime)
 
         if (Input.GetKeyDown(KeyCode.R)) ResetDie();
     }
@@ -50,6 +46,7 @@ public class Dice : MonoBehaviour
     public void ResetDie()
     {
         sManager.m_diceStatic = false;
+
         if (!m_chosen)
         {
             Vector3 randomRot = new Vector3(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));

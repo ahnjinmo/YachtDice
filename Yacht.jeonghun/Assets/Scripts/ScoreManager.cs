@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
+    // External Reference
     public GameObject diceObj;
     public GameObject diceUpclose;
     public GameObject diceChosen;
@@ -14,20 +15,20 @@ public class ScoreManager : MonoBehaviour
     public Canvas rerollButton;
 
     List<Transform> m_dice;
-    List<Dice> m_diceProperties;
     List<Transform> m_diceUpclose;
     List<Transform> m_diceChosen;
-    
+    List<Dice> m_diceProperties;
+
     List<int> m_scores;
     List<Text> m_userScore;
 
     public bool m_diceStatic;
+    bool m_choosingDice;
+    bool m_bonusAdded;
     int m_numChosen;
     int m_numRolls;
     int total;
     int turns;
-    bool m_choosingDice;
-    bool m_bonusAdded;
     Ray m_ray;
 
     bool m_aces;
@@ -200,72 +201,32 @@ public class ScoreManager : MonoBehaviour
                 {
                     case "white":
                         m_diceProperties[0].m_chosen = !m_diceProperties[0].m_chosen;
-                        if (m_diceProperties[0].m_chosen)
-                        {
-                            hits[i].collider.gameObject.transform.position = m_diceChosen[0].position;
-                            m_numChosen++;
-                        }
-                        else
-                        {
-                            hits[i].collider.gameObject.transform.position = m_diceUpclose[0].position;
-                            m_numChosen--;
-                        }
+                        if (m_diceProperties[0].m_chosen) { hits[i].collider.gameObject.transform.position = m_diceChosen[0].position;    m_numChosen++; }
+                        else { hits[i].collider.gameObject.transform.position = m_diceUpclose[0].position; m_numChosen--; }
                         chosen = true;
                         break;
                     case "black":
                         m_diceProperties[1].m_chosen = !m_diceProperties[1].m_chosen;
-                        if (m_diceProperties[1].m_chosen)
-                        {
-                            hits[i].collider.gameObject.transform.position = m_diceChosen[1].position;
-                            m_numChosen++;
-                        }
-                        else
-                        {
-                            hits[i].collider.gameObject.transform.position = m_diceUpclose[1].position;
-                            m_numChosen--;
-                        }
+                        if (m_diceProperties[1].m_chosen) { hits[i].collider.gameObject.transform.position = m_diceChosen[1].position;    m_numChosen++; }
+                        else { hits[i].collider.gameObject.transform.position = m_diceUpclose[1].position;   m_numChosen--; }
                         chosen = true;
                         break;
                     case "red":
                         m_diceProperties[2].m_chosen = !m_diceProperties[2].m_chosen;
-                        if (m_diceProperties[2].m_chosen)
-                        {
-                            hits[i].collider.gameObject.transform.position = m_diceChosen[2].position;
-                            m_numChosen++;
-                        }
-                        else
-                        {
-                            hits[i].collider.gameObject.transform.position = m_diceUpclose[2].position;
-                            m_numChosen--;
-                        }
+                        if (m_diceProperties[2].m_chosen) { hits[i].collider.gameObject.transform.position = m_diceChosen[2].position;    m_numChosen++; }
+                        else { hits[i].collider.gameObject.transform.position = m_diceUpclose[2].position; m_numChosen--; }
                         chosen = true;
                         break;
                     case "blue":
                         m_diceProperties[3].m_chosen = !m_diceProperties[3].m_chosen;
-                        if (m_diceProperties[3].m_chosen)
-                        {
-                            hits[i].collider.gameObject.transform.position = m_diceChosen[3].position;
-                            m_numChosen++;
-                        }
-                        else
-                        {
-                            hits[i].collider.gameObject.transform.position = m_diceUpclose[3].position;
-                            m_numChosen--;
-                        }
+                        if (m_diceProperties[3].m_chosen) { hits[i].collider.gameObject.transform.position = m_diceChosen[3].position;    m_numChosen++; }
+                        else { hits[i].collider.gameObject.transform.position = m_diceUpclose[3].position;   m_numChosen--; }
                         chosen = true;
                         break;
                     case "green":
                         m_diceProperties[4].m_chosen = !m_diceProperties[4].m_chosen;
-                        if (m_diceProperties[4].m_chosen)
-                        {
-                            hits[i].collider.gameObject.transform.position = m_diceChosen[4].position;
-                            m_numChosen++;
-                        }
-                        else
-                        {
-                            hits[i].collider.gameObject.transform.position = m_diceUpclose[4].position;
-                            m_numChosen--;
-                        }
+                        if (m_diceProperties[4].m_chosen) { hits[i].collider.gameObject.transform.position = m_diceChosen[4].position;    m_numChosen++; }
+                        else { hits[i].collider.gameObject.transform.position = m_diceUpclose[4].position;   m_numChosen--; }
                         chosen = true;
                         break;
                     case "reroll":
@@ -305,10 +266,7 @@ public class ScoreManager : MonoBehaviour
     int CheckDeuces()
     {
         int score = 0;
-        for (int i = 0; i < 5; i++)
-        {
-            if (m_scores[i] == 2) score += 2;
-        }
+        for (int i = 0; i < 5; i++) { if (m_scores[i] == 2) score += 2; }
 
         m_userScore[1].text = score.ToString();
 
@@ -318,10 +276,7 @@ public class ScoreManager : MonoBehaviour
     int CheckThrees()
     {
         int score = 0;
-        for (int i = 0; i < 5; i++)
-        {
-            if (m_scores[i] == 3) score += 3;
-        }
+        for (int i = 0; i < 5; i++) { if (m_scores[i] == 3) score += 3; }
 
         m_userScore[2].text = score.ToString();
 
@@ -331,10 +286,7 @@ public class ScoreManager : MonoBehaviour
     int CheckFours()
     {
         int score = 0;
-        for (int i = 0; i < 5; i++)
-        {
-            if (m_scores[i] == 4) score += 4;
-        }
+        for (int i = 0; i < 5; i++) { if (m_scores[i] == 4) score += 4; }
 
         m_userScore[3].text = score.ToString();
         
@@ -344,10 +296,7 @@ public class ScoreManager : MonoBehaviour
     int CheckFives()
     {
         int score = 0;
-        for (int i = 0; i < 5; i++)
-        {
-            if (m_scores[i] == 5) score += 5;
-        }
+        for (int i = 0; i < 5; i++) { if (m_scores[i] == 5) score += 5; }
 
         m_userScore[4].text = score.ToString();
 
@@ -357,10 +306,7 @@ public class ScoreManager : MonoBehaviour
     int CheckSixes()
     {
         int score = 0;
-        for (int i = 0; i < 5; i++)
-        {
-            if (m_scores[i] == 6) score += 6;
-        }
+        for (int i = 0; i < 5; i++) { if (m_scores[i] == 6) score += 6; }
 
         m_userScore[5].text = score.ToString();
 
@@ -591,11 +537,7 @@ public class ScoreManager : MonoBehaviour
 
     void NextTurn()
     {
-        for(int i = 0; i < 5; i++)
-        {
-            m_diceProperties[i].m_chosen = false;
-            m_diceProperties[i].ResetDie();
-        }
+        for(int i = 0; i < 5; i++) { m_diceProperties[i].m_chosen = false;   m_diceProperties[i].ResetDie(); }
         m_choosingDice = false;     m_diceStatic = false;   m_numChosen = 0;    m_numRolls = 0;
         rerollButton.gameObject.SetActive(false);
         totalScore.text = total.ToString();
